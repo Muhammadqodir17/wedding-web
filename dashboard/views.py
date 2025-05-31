@@ -117,7 +117,7 @@ class OurTeamViewSet(ViewSet):
     )
     def get_all(self, request, *args, **kwargs):
         our_team = TeamMemberModel.objects.all()
-        serializer = TeamMemberDashboardSerializer(our_team, many=True)
+        serializer = TeamMemberDashboardSerializer(our_team, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -398,7 +398,7 @@ class CategoriesViewSet(ViewSet):
     )
     def get_all(self, request, *args, **kwargs):
         our_team = WeddingCategoryModel.objects.all()
-        serializer = CategorySerializer(our_team, many=True)
+        serializer = CategorySerializer(our_team, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -586,7 +586,7 @@ class AboutUsViewSet(ViewSet):
     )
     def get_all(self, request, *args, **kwargs):
         our_team = AboutUsModel.objects.all()
-        serializer = AboutUsDashboardSerializer(our_team, many=True)
+        serializer = AboutUsDashboardSerializer(our_team, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -808,7 +808,7 @@ class SocialMediasViewSet(ViewSet):
     )
     def get_all(self, request, *args, **kwargs):
         our_team = WebSocialMedia.objects.all()
-        serializer = SocialMediaSerializer(our_team, many=True)
+        serializer = SocialMediaSerializer(our_team, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(

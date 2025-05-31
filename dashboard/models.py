@@ -77,7 +77,7 @@ class PriceModel(BaseModel):
     highlights = models.ManyToManyField(PriceHighLightModel)
 
     def __str__(self):
-        return f"{self.get_type_display}"
+        return f'{self.get_type_display()}'
 
 # 2
 class BookModel(BaseModel):

@@ -45,7 +45,7 @@ class WebViewSet(ViewSet):
     )
     def get_main_page(self, request, *args, **kwargs):
         main_page = HomeModel.objects.all().first()
-        serializer = MainPageSerializer(main_page)
+        serializer = MainPageSerializer(main_page, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -58,7 +58,7 @@ class WebViewSet(ViewSet):
     )
     def about_us(self, request, *args, **kwargs):
         main_page = AboutUsModel.objects.all().first()
-        serializer = AboutUsSerializer(main_page)
+        serializer = AboutUsSerializer(main_page, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -71,7 +71,7 @@ class WebViewSet(ViewSet):
     )
     def about_us_details(self, request, *args, **kwargs):
         main_page = AboutUsModel.objects.all().first()
-        serializer = AboutUsDetailsSerializer(main_page)
+        serializer = AboutUsDetailsSerializer(main_page, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -84,7 +84,7 @@ class WebViewSet(ViewSet):
     )
     def our_services(self, request, *args, **kwargs):
         main_page = WeddingCategoryModel.objects.all()
-        serializer = WeddingCategorySerializer(main_page, many=True)
+        serializer = WeddingCategorySerializer(main_page, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -97,7 +97,7 @@ class WebViewSet(ViewSet):
     )
     def gallery(self, request, *args, **kwargs):
         main_page = GalleryModel.objects.all()
-        serializer = GallerySerializer(main_page, many=True)
+        serializer = GallerySerializer(main_page, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -123,7 +123,7 @@ class WebViewSet(ViewSet):
     )
     def news(self, request, *args, **kwargs):
         main_page = NewsModel.objects.all()
-        serializer = NewsSerializer(main_page, many=True)
+        serializer = NewsSerializer(main_page, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -136,7 +136,7 @@ class WebViewSet(ViewSet):
     )
     def our_team(self, request, *args, **kwargs):
         main_page = TeamMemberModel.objects.all()
-        serializer = TeamMemberSerializer(main_page, many=True)
+        serializer = TeamMemberSerializer(main_page, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -211,7 +211,7 @@ class WebViewSet(ViewSet):
     )
     def web_social_media(self, request, *args, **kwargs):
         main_page = WebSocialMedia.objects.all()
-        serializer = WebSocialMediaSerializer(main_page, many=True)
+        serializer = WebSocialMediaSerializer(main_page, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -258,6 +258,6 @@ class WebViewSet(ViewSet):
         tags=['web']
     )
     def get_gallery_by_id(self, request, *args, **kwargs):
-        galleries = GalleryModel.objects.filter(id=kwargs['pk'])
-        serializer = GallerySerializer(galleries, many=True)
+        galleries = GalleryModel.objects.filter(category__id=kwargs['pk'])
+        serializer = GallerySerializer(galleries, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)

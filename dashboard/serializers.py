@@ -8,6 +8,7 @@ from .models import (
     WebSocialMedia,
     WebContactInfoModel,
     DashboardStatsModel,
+    SALARY_TYPE,
 )
 from web.models import ContactUsModel
 
@@ -18,12 +19,23 @@ class TeamMemberDashboardSerializer(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name', 'position', 'from_working_hours', 'to_working_hours', 'salary_type', 'salary',
                   'work_start_data', 'image']
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['position'] = instance.position.name
+        data['salary_type'] = dict(SALARY_TYPE).get(instance.salary_type, 'Unknown')
+        return data
+
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookModel
         fields = ['id', 'book_date', 'category', 'booker_first_name', 'booker_last_name', 'phone_number',
                   'number_of_guests', 'price']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['category'] = instance.category.name
+        return data
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -37,12 +49,23 @@ class PriceDashboardSerializer(serializers.ModelSerializer):
         model = PriceModel
         fields = ['id', 'type', 'price', 'description', 'highlights']
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['type'] = instance.get_type_display()
+        data['highlights'] = instance.highlights.description
+        return data
+
 
 class AboutUsDashboardSerializer(serializers.ModelSerializer):
     class Meta:
         model = AboutUsModel
         fields = ['id', 'title', 'description', 'image', 'highlight', 'main_description', 'successful_events',
                   'work_experience']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['highlight'] = instance.highlight.description
+        return data
 
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -89,4 +112,9 @@ class UpcomingEventsSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookModel
         fields = ['id', 'category', 'book_date', 'booker_first_name', 'booker_last_name', 'number_of_guests']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['category'] = instance.category.name
+        return data
 
