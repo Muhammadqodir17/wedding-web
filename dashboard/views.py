@@ -139,6 +139,13 @@ class OurTeamViewSet(ViewSet):
                 description="last_name",
             ),
             openapi.Parameter(
+                name='position',
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_INTEGER,
+                required=True,
+                description="position",
+            ),
+            openapi.Parameter(
                 name='from_working_hours',
                 in_=openapi.IN_FORM,
                 type=openapi.TYPE_STRING,
@@ -209,6 +216,13 @@ class OurTeamViewSet(ViewSet):
                 type=openapi.TYPE_STRING,
                 required=False,
                 description="last_name",
+            ),
+            openapi.Parameter(
+                name='position',
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_INTEGER,
+                required=False,
+                description="position",
             ),
             openapi.Parameter(
                 name='from_working_hours',

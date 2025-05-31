@@ -15,7 +15,7 @@ from web.models import ContactUsModel
 class TeamMemberDashboardSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeamMemberModel
-        fields = ['id', 'first_name', 'last_name', 'from_working_hours', 'to_working_hours', 'salary_type', 'salary',
+        fields = ['id', 'first_name', 'last_name', 'position', 'from_working_hours', 'to_working_hours', 'salary_type', 'salary',
                   'work_start_data', 'image']
 
 
