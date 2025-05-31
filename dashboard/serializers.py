@@ -8,6 +8,7 @@ from .models import (
     WebSocialMedia,
     WebContactInfoModel,
     DashboardStatsModel,
+    SALARY_TYPE,
 )
 from web.models import ContactUsModel
 
@@ -17,6 +18,12 @@ class TeamMemberDashboardSerializer(serializers.ModelSerializer):
         model = TeamMemberModel
         fields = ['id', 'first_name', 'last_name', 'position', 'from_working_hours', 'to_working_hours', 'salary_type', 'salary',
                   'work_start_data', 'image']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['position'] = instance.position.name
+        data['salary_type'] = dict(SALARY_TYPE).get(instance.salary_type, 'Unknown')
+        return data
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -36,6 +43,12 @@ class PriceDashboardSerializer(serializers.ModelSerializer):
     class Meta:
         model = PriceModel
         fields = ['id', 'type', 'price', 'description', 'highlights']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['type'] = instance.get_type_display()
+        data['highlights'] = instance.highlights.description
+        return data
 
 
 class AboutUsDashboardSerializer(serializers.ModelSerializer):

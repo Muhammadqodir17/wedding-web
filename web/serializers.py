@@ -11,7 +11,7 @@ from dashboard.models import (
     AboutUsModel,
     HomeModel,
     AboutUsHighlightModel,
-    PriceHighLightModel,
+    PriceHighLightModel, SALARY_TYPE,
 )
 from .models import ContactUsModel
 
@@ -26,6 +26,11 @@ class AboutUsSerializer(serializers.ModelSerializer):
     class Meta:
         model = AboutUsModel
         fields = ['id', 'title', 'description', 'highlight', 'image']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['highlight'] = instance.highlight.description
+        return data
 
 
 class AboutUsDetailsSerializer(serializers.ModelSerializer):
@@ -51,6 +56,12 @@ class PriceSerializer(serializers.ModelSerializer):
         model = PriceModel
         fields = ['id', 'type', 'price', 'description', 'highlights']
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['type'] = instance.get_type_display()
+        data['highlight'] = instance.highlight.description
+        return data
+
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
@@ -68,6 +79,11 @@ class TeamMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeamMemberModel
         fields = ['id', 'image', 'first_name', 'last_name', 'position']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['position'] = instance.position.name
+        return data
 
 
 class WebContactInfoSerializer(serializers.ModelSerializer):
