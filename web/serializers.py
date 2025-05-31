@@ -48,10 +48,17 @@ class WeddingCategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'image', 'name', 'description']
 
 
+class GetCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WeddingCategoryModel
+        fields = ['id', 'name']
+
+
 class GallerySerializer(serializers.ModelSerializer):
+    category = GetCategorySerializer()
     class Meta:
         model = GalleryModel
-        fields = ['id', 'image']
+        fields = ['id', 'image', 'category']
 
 
 class PriceSerializer(serializers.ModelSerializer):
@@ -136,11 +143,5 @@ class CalendarDataInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookModel
         fields = ['id', 'book_date', 'additional_info', 'category']
-
-
-class GetCategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = WeddingCategoryModel
-        fields = ['name']
 
 
