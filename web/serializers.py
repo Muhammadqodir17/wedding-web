@@ -1,3 +1,4 @@
+from django.template.context_processors import request
 from rest_framework import serializers
 from dashboard.models import (
     WebSocialMedia,
@@ -22,15 +23,17 @@ class MainPageSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description', 'image']
 
 
+class AboutUsHighlightSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AboutUsHighlightModel
+        fields = ['title', 'description']
+
+
 class AboutUsSerializer(serializers.ModelSerializer):
+    highlight = AboutUsHighlightSerializer(many=True)
     class Meta:
         model = AboutUsModel
         fields = ['id', 'title', 'description', 'highlight', 'image']
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['highlight'] = instance.highlight.description
-        return data
 
 
 class AboutUsDetailsSerializer(serializers.ModelSerializer):
@@ -89,7 +92,7 @@ class TeamMemberSerializer(serializers.ModelSerializer):
 class WebContactInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = WebContactInfoModel
-        fields = ['id', 'phone_number', 'email', 'location']
+        fields = ['id', 'phone_number', 'email', 'location', 'location_url']
 
 
 class WebSocialMediaSerializer(serializers.ModelSerializer):
@@ -122,12 +125,15 @@ class CalendarDataSerializer(serializers.ModelSerializer):
         fields = ['id', 'book_date']
 
 
+class CalendarCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WeddingCategoryModel
+        fields = ['name', 'image']
+
+
 class CalendarDataInfoSerializer(serializers.ModelSerializer):
+    category = CalendarCategorySerializer()
     class Meta:
         model = BookModel
         fields = ['id', 'book_date', 'additional_info', 'category']
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['category'] = instance.category.name
-        return data

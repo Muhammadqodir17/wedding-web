@@ -83,7 +83,8 @@ class SocialMediaSerializer(serializers.ModelSerializer):
 class WebSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = WebContactInfoModel
-        fields = ['id', 'wedding_hall_name', 'phone_number', 'email', 'open_from', 'close_to', 'location']
+        fields = ['id', 'wedding_hall_name', 'phone_number', 'email', 'open_from', 'close_to',
+                  'location', 'location_url']
 
 
 class DashboardStatsSerializer(serializers.ModelSerializer):

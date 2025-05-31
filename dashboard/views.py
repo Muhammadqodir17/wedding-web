@@ -929,10 +929,12 @@ class WebSettingsViewSet(ViewSet):
                 'open_from': openapi.Schema(type=openapi.TYPE_STRING, description='open_from'),
                 'close_to': openapi.Schema(type=openapi.TYPE_STRING, description='close_to'),
                 'location': openapi.Schema(type=openapi.TYPE_STRING, description='location'),
+                'location_url': openapi.Schema(type=openapi.TYPE_STRING, description='location_url'),
             },
-            required=['wedding_hall_name', 'phone_number', 'email', 'open_from', 'close_to', 'location']
+            required=['wedding_hall_name', 'phone_number', 'email', 'open_from', 'close_to', 'location',
+                      'location_url']
         ),
-        responses={201: MessageSerializer()},
+        responses={201: WebSettingsSerializer()},
         tags=['dashboard'],
     )
     def create(self, request, *args, **kwargs):
@@ -954,10 +956,11 @@ class WebSettingsViewSet(ViewSet):
                 'open_from': openapi.Schema(type=openapi.TYPE_STRING, description='open_from'),
                 'close_to': openapi.Schema(type=openapi.TYPE_STRING, description='close_to'),
                 'location': openapi.Schema(type=openapi.TYPE_STRING, description='location'),
+                'location_url': openapi.Schema(type=openapi.TYPE_STRING, description='location_url'),
             },
             required=[]
         ),
-        responses={200: MessageSerializer()},
+        responses={200: WebSettingsSerializer()},
         tags=['dashboard'],
     )
     def update(self, request, *args, **kwargs):

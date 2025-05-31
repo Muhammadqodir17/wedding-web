@@ -246,7 +246,7 @@ class WebViewSet(ViewSet):
     def calendar_data_info(self, request, *args, **kwargs):
         data = request.GET
         data_info = BookModel.objects.filter(book_date=data.get('date')).first()
-        serializer = CalendarDataInfoSerializer(data_info)
+        serializer = CalendarDataInfoSerializer(data_info, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
