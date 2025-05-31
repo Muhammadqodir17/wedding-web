@@ -141,6 +141,6 @@ class CalendarDataInfoSerializer(serializers.ModelSerializer):
 class GetCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = WeddingCategoryModel
-        fields = ['name']
+        fields = ['id', 'name']
 
 
