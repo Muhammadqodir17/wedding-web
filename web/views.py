@@ -258,6 +258,6 @@ class WebViewSet(ViewSet):
         tags=['web']
     )
     def get_gallery_by_id(self, request, *args, **kwargs):
-        galleries = GalleryModel.objects.filter(id=kwargs['pk'])
+        galleries = GalleryModel.objects.filter(category__id=kwargs['pk'])
         serializer = GallerySerializer(galleries, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
