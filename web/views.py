@@ -30,7 +30,7 @@ from .serializers import (
     CategoriesForFooterSerializer,
     WebContactInfoForFooterSerializer,
     CalendarDataSerializer,
-    CalendarDataInfoSerializer,
+    CalendarDataInfoSerializer, GetCategorySerializer,
 )
 
 
@@ -260,4 +260,17 @@ class WebViewSet(ViewSet):
     def get_gallery_by_id(self, request, *args, **kwargs):
         galleries = GalleryModel.objects.filter(category__id=kwargs['pk'])
         serializer = GallerySerializer(galleries, many=True, context={'request': request})
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="Get all Categories",
+        operation_summary="Get all Categories",
+        responses={
+            200: CalendarDataSerializer(),
+        },
+        tags=['web']
+    )
+    def get_categories(self, request, *args, **kwargs):
+        categories = WeddingCategoryModel.objects.all()
+        serializer = GetCategorySerializer(categories, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)

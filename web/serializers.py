@@ -137,3 +137,10 @@ class CalendarDataInfoSerializer(serializers.ModelSerializer):
         model = BookModel
         fields = ['id', 'book_date', 'additional_info', 'category']
 
+
+class GetCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WeddingCategoryModel
+        fields = ['name']
+
+
