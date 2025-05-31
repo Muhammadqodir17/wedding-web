@@ -20,4 +20,5 @@ urlpatterns = [
     path('get_calendar_datas/', WebViewSet.as_view({'get': 'calendar_datas'}), name='get_calendar_datas'),
     path('get_calendar_data_info/', WebViewSet.as_view({'get': 'calendar_data_info'}), name='get_calendar_data_info'),
     path('get_gallery_by_id/<int:pk>/', WebViewSet.as_view({'get': 'get_gallery_by_id'}), name='get_gallery_by_id'),
+    path('get_categories/', WebViewSet.as_view({'get': 'get_categories'}), name='get_categories'),
 ]
