@@ -126,3 +126,8 @@ class CalendarDataInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookModel
         fields = ['id', 'book_date', 'additional_info', 'category']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['category'] = instance.category.name
+        return data
