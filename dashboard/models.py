@@ -32,7 +32,7 @@ class AboutUsModel(BaseModel):
     image = models.ImageField(upload_to='media/', null=True)
     highlight = models.ManyToManyField(AboutUsHighlightModel)
     main_description = models.TextField()
-    successful_events = models.ImageField(default=0)
+    successful_events = models.IntegerField(default=0)
     work_experience = models.IntegerField(default=0)
 
     def __str__(self):
