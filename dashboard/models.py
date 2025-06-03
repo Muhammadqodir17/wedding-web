@@ -3,13 +3,6 @@ from django.db.models import FloatField
 
 from core.base import BaseModel
 
-
-TYPE = (
-    (1, 'Standard'),
-    (2, 'Premium'),
-    (3, 'Luxury'),
-)
-
 SALARY_TYPE = (
     (1, 'Monthly'),
     (2, 'Daily'),
@@ -69,15 +62,23 @@ class PriceHighLightModel(BaseModel):
     def __str__(self):
         return f'{self.description}'
 
+
+class PriceTypeModel(BaseModel):
+    name = models.CharField(max_length=250)
+
+    def __str__(self):
+        return f'{self.name}'
+
+
 # 4
 class PriceModel(BaseModel):
-    type = models.IntegerField(choices=TYPE, default=1)
+    type = models.ForeignKey(PriceTypeModel, on_delete=models.CASCADE, blank=True, null=True)
     price = FloatField(default=0)
     description = models.TextField()
     highlights = models.ManyToManyField(PriceHighLightModel)
 
     def __str__(self):
-        return f'{self.get_type_display()}'
+        return f'{self.type.name}'
 
 # 2
 class BookModel(BaseModel):

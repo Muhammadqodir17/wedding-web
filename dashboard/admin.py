@@ -7,6 +7,7 @@ from .models import (
     GalleryModel,
     PriceHighLightModel,
     PriceModel,
+    PriceTypeModel,
     BookModel,
     NewsModel,
     PositionModel,
@@ -22,6 +23,7 @@ admin.site.register(WeddingCategoryModel)
 admin.site.register(GalleryModel)
 admin.site.register(PriceHighLightModel)
 admin.site.register(PriceModel)
+admin.site.register(PriceTypeModel)
 admin.site.register(BookModel)
 admin.site.register(NewsModel)
 admin.site.register(PositionModel)

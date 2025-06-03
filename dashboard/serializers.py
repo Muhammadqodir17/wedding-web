@@ -9,6 +9,9 @@ from .models import (
     WebContactInfoModel,
     DashboardStatsModel,
     SALARY_TYPE,
+    PriceTypeModel,
+    AboutUsHighlightModel,
+    PriceHighLightModel,
 )
 from web.models import ContactUsModel
 
@@ -44,28 +47,36 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'image']
 
 
+class PriceHighlightDashboardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PriceHighLightModel
+        fields = ['id', 'description']
+
+
 class PriceDashboardSerializer(serializers.ModelSerializer):
+    highlights = PriceHighlightDashboardSerializer(many=True)
     class Meta:
         model = PriceModel
         fields = ['id', 'type', 'price', 'description', 'highlights']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['type'] = instance.get_type_display()
-        data['highlights'] = instance.highlights.description
+        data['type'] = instance.type.name
         return data
 
 
+class AboutUsHighlightDashboardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AboutUsHighlightModel
+        fields = ['id', 'title', 'description']
+
+
 class AboutUsDashboardSerializer(serializers.ModelSerializer):
+    highlight = AboutUsHighlightDashboardSerializer(many=True)
     class Meta:
         model = AboutUsModel
         fields = ['id', 'title', 'description', 'image', 'highlight', 'main_description', 'successful_events',
                   'work_experience']
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['highlight'] = instance.highlight.description
-        return data
 
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -119,3 +130,8 @@ class UpcomingEventsSerializer(serializers.ModelSerializer):
         data['category'] = instance.category.name
         return data
 
+
+class PriceTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PriceTypeModel
+        fields = ['id', 'name']
