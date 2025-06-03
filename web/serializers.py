@@ -1,4 +1,3 @@
-from django.template.context_processors import request
 from rest_framework import serializers
 from dashboard.models import (
     WebSocialMedia,
@@ -12,7 +11,8 @@ from dashboard.models import (
     AboutUsModel,
     HomeModel,
     AboutUsHighlightModel,
-    PriceHighLightModel, SALARY_TYPE,
+    PriceHighLightModel,
+    SALARY_TYPE,
 )
 from .models import ContactUsModel
 
@@ -61,15 +61,21 @@ class GallerySerializer(serializers.ModelSerializer):
         fields = ['id', 'image', 'category']
 
 
+class PriceHighlightSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PriceHighLightModel
+        fields = ['id', 'description']
+
+
 class PriceSerializer(serializers.ModelSerializer):
+    highlights = AboutUsHighlightSerializer(many=True)
     class Meta:
         model = PriceModel
         fields = ['id', 'type', 'price', 'description', 'highlights']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['type'] = instance.get_type_display()
-        data['highlight'] = instance.highlight.description
+        data['type'] = instance.type.name
         return data
 
 
@@ -143,5 +149,6 @@ class CalendarDataInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookModel
         fields = ['id', 'book_date', 'additional_info', 'category']
+
 
 

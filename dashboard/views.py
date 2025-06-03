@@ -28,6 +28,7 @@ from .serializers import (
     DashboardStatsSerializer,
     UnansweredMessagesSerializer,
     UpcomingEventsSerializer,
+    PriceTypeSerializer,
 )
 from web.models import ContactUsModel
 from rest_framework.parsers import (
@@ -988,3 +989,6 @@ class WebSettingsViewSet(ViewSet):
             return Response(data={'error': 'Contact Info not found'}, status=status.HTTP_404_NOT_FOUND)
         our_team.delete()
         return Response(data={'message': 'Contact Info successfully deleted'}, status=status.HTTP_200_OK)
+
+
+
