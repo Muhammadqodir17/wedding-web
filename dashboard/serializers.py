@@ -54,10 +54,9 @@ class PriceHighlightDashboardSerializer(serializers.ModelSerializer):
 
 
 class PriceDashboardSerializer(serializers.ModelSerializer):
-    highlights = PriceHighlightDashboardSerializer(many=True)
     class Meta:
         model = PriceModel
-        fields = ['id', 'type', 'price', 'description', 'highlights']
+        fields = ['id', 'type', 'price', 'description']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -72,10 +71,9 @@ class AboutUsHighlightDashboardSerializer(serializers.ModelSerializer):
 
 
 class AboutUsDashboardSerializer(serializers.ModelSerializer):
-    highlight = AboutUsHighlightDashboardSerializer(many=True)
     class Meta:
         model = AboutUsModel
-        fields = ['id', 'title', 'description', 'image', 'highlight', 'main_description', 'successful_events',
+        fields = ['id', 'title', 'description', 'image', 'main_description', 'successful_events',
                   'work_experience']
 
 

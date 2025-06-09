@@ -8,7 +8,7 @@ from .views import (
     AboutUsViewSet,
     MessagesViewSet,
     SocialMediasViewSet,
-    WebSettingsViewSet,
+    WebSettingsViewSet, PriceHighlightViewSet, AboutUsHighlightViewSet,
 )
 
 urlpatterns = [
@@ -51,10 +51,26 @@ urlpatterns = [
     path('get_all_social_medias/', SocialMediasViewSet.as_view({'get': 'get_all'}), name='get_all_social_medias'),
     path('create_social_media/', SocialMediasViewSet.as_view({'post': 'create'}), name='create_social_media'),
     path('update_social_media/<int:pk>/', SocialMediasViewSet.as_view({'patch': 'update'}), name='update_social_media'),
-    path('delete_social_media/<int:pk>/', SocialMediasViewSet.as_view({'delete': 'delete'}), name='delete_social_media'),
+    path('delete_social_media/<int:pk>/', SocialMediasViewSet.as_view({'delete': 'delete'}),
+         name='delete_social_media'),
     # WebSettings
     path('get_all_web_settings/', WebSettingsViewSet.as_view({'get': 'get_all'}), name='get_all_web_settings'),
     path('create_web_setting/', WebSettingsViewSet.as_view({'post': 'create'}), name='create_web_setting'),
     path('update_web_setting/<int:pk>/', WebSettingsViewSet.as_view({'patch': 'update'}), name='update_web_setting'),
     path('delete_web_setting/<int:pk>/', WebSettingsViewSet.as_view({'delete': 'delete'}), name='delete_web_setting'),
+    # about us highlight
+    path('get_about_us_highlight/', AboutUsHighlightViewSet.as_view({'get': 'get'}), name='get_about_us_highlight'),
+    path('create_about_us_highlight/', AboutUsHighlightViewSet.as_view({'create': 'create'}),
+         name='create_about_us_highlight'),
+    path('update_about_us_highlight/<int:pk>/', AboutUsHighlightViewSet.as_view({'patch': 'update'}),
+         name='update_about_us_highlight'),
+    path('delete_about_us_highlight/<int:pk>/', AboutUsHighlightViewSet.as_view({'delete': 'delete'}),
+         name='delete_about_us_highlight'),
+    # price highlight
+    path('get_price_highlight/', PriceHighlightViewSet.as_view({'get': 'get'}), name='get_price_highlight'),
+    path('create_price_highlight/', PriceHighlightViewSet.as_view({'create': 'create'}), name='create_price_highlight'),
+    path('update_price_highlight/<int:pk>/', PriceHighlightViewSet.as_view({'patch': 'update'}),
+         name='update_price_highlight'),
+    path('delete_price_highlight/<int:pk>/', PriceHighlightViewSet.as_view({'delete': 'delete'}),
+         name='delete_price_highlight'),
 ]

@@ -5,6 +5,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils.timezone import now
+from yaml import serialize
 
 from .models import (
     TeamMemberModel,
@@ -14,7 +15,7 @@ from .models import (
     AboutUsModel,
     WebSocialMedia,
     WebContactInfoModel,
-    DashboardStatsModel
+    DashboardStatsModel, AboutUsHighlightModel, PriceHighLightModel
 )
 from .serializers import (
     TeamMemberDashboardSerializer,
@@ -28,7 +29,7 @@ from .serializers import (
     DashboardStatsSerializer,
     UnansweredMessagesSerializer,
     UpcomingEventsSerializer,
-    PriceTypeSerializer,
+    PriceTypeSerializer, AboutUsHighlightDashboardSerializer, PriceHighlightDashboardSerializer,
 )
 from web.models import ContactUsModel
 from rest_framework.parsers import (
@@ -517,9 +518,8 @@ class PricesViewSet(ViewSet):
                 'type': openapi.Schema(type=openapi.TYPE_INTEGER, description='type'),
                 'description': openapi.Schema(type=openapi.TYPE_STRING, description='description'),
                 'price': openapi.Schema(type=openapi.TYPE_NUMBER, format='float', description='price'),
-                'highlights': openapi.Schema(type=openapi.TYPE_STRING, description='highlights'),
             },
-            required=['type', 'description', 'price', 'highlights']
+            required=['type', 'description', 'price']
         ),
         responses={201: PriceDashboardSerializer()},
         tags=['dashboard'],
@@ -540,7 +540,6 @@ class PricesViewSet(ViewSet):
                 'type': openapi.Schema(type=openapi.TYPE_INTEGER, description='type'),
                 'description': openapi.Schema(type=openapi.TYPE_STRING, description='description'),
                 'price': openapi.Schema(type=openapi.TYPE_NUMBER, format='float', description='price'),
-                'highlights': openapi.Schema(type=openapi.TYPE_STRING, description='highlights'),
             },
             required=[]
         ),
@@ -609,13 +608,6 @@ class AboutUsViewSet(ViewSet):
                 description="description",
             ),
             openapi.Parameter(
-                name='highlight',
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                required=True,
-                description="highlight",
-            ),
-            openapi.Parameter(
                 name='main_description',
                 in_=openapi.IN_FORM,
                 type=openapi.TYPE_STRING,
@@ -671,13 +663,6 @@ class AboutUsViewSet(ViewSet):
                 type=openapi.TYPE_STRING,
                 required=False,
                 description="description",
-            ),
-            openapi.Parameter(
-                name='highlight',
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                required=False,
-                description="highlight",
             ),
             openapi.Parameter(
                 name='main_description',
@@ -989,6 +974,156 @@ class WebSettingsViewSet(ViewSet):
             return Response(data={'error': 'Contact Info not found'}, status=status.HTTP_404_NOT_FOUND)
         our_team.delete()
         return Response(data={'message': 'Contact Info successfully deleted'}, status=status.HTTP_200_OK)
+
+
+class PriceHighlightViewSet(ViewSet):
+    @swagger_auto_schema(
+        operation_description="Get all Price Highlights",
+        operation_summary="Get all Price Highlights",
+        responses={
+            200: PriceHighlightDashboardSerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get(self, request, *args, **kwargs):
+        highlight = PriceHighLightModel.objects.all()
+        serializer = PriceHighlightDashboardSerializer(highlight, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="Create Price Highlights",
+        operation_summary="Create Price Highlights",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'description': openapi.Schema(type=openapi.TYPE_STRING, description='description'),
+            },
+            required=['description']
+        ),
+        responses={201: PriceHighlightDashboardSerializer()},
+        tags=['dashboard'],
+    )
+    def create(self, request, *args, **kwargs):
+        serializer = PriceHighlightDashboardSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        operation_description="Update Price Highlights",
+        operation_summary="Update Price Highlights",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'description': openapi.Schema(type=openapi.TYPE_STRING, description='description'),
+            },
+            required=[]
+        ),
+        responses={200: PriceHighlightDashboardSerializer()},
+        tags=['dashboard'],
+    )
+    def update(self, request, *args, **kwargs):
+        highlight = PriceHighLightModel.objects.filter(id=kwargs['pk']).first()
+        if highlight is None:
+            return Response(data={'error': 'Highlight not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = PriceHighlightDashboardSerializer(highlight, data=request.data, partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="Delete Price Highlights",
+        operation_summary="Delete Price Highlights",
+        responses={
+            200: 'Successfully deleted',
+            404: 'Price Highlights not found',
+        },
+        tags=['dashboard']
+    )
+    def delete(self, request, *args, **kwargs):
+        highlight = PriceHighLightModel.objects.filter(id=kwargs['pk']).first()
+        if highlight is None:
+            return Response(data={'error': 'Highlight not found'}, status=status.HTTP_404_NOT_FOUND)
+        highlight.delete()
+        return Response(data={'message': 'Highlight successfully deleted'})
+
+
+class AboutUsHighlightViewSet(ViewSet):
+    @swagger_auto_schema(
+        operation_description="Get all About Us Highlights",
+        operation_summary="Get all About Us Highlights",
+        responses={
+            200: AboutUsHighlightDashboardSerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get(self, request, *args, **kwargs):
+        highlight = AboutUsHighlightModel.objects.all()
+        serializer = AboutUsHighlightDashboardSerializer(highlight, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="Create About Us Highlights",
+        operation_summary="Create About Us Highlights",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'description': openapi.Schema(type=openapi.TYPE_STRING, description='description'),
+                'title': openapi.Schema(type=openapi.TYPE_STRING, description='title'),
+            },
+            required=['description', 'title']
+        ),
+        responses={201: AboutUsHighlightDashboardSerializer()},
+        tags=['dashboard'],
+    )
+    def create(self, request, *args, **kwargs):
+        serializer = AboutUsHighlightDashboardSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        operation_description="Update About Us Highlights",
+        operation_summary="Update About Us Highlights",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'description': openapi.Schema(type=openapi.TYPE_STRING, description='description'),
+                'title': openapi.Schema(type=openapi.TYPE_STRING, description='title'),
+            },
+            required=[]
+        ),
+        responses={200: AboutUsHighlightDashboardSerializer()},
+        tags=['dashboard'],
+    )
+    def update(self, request, *args, **kwargs):
+        highlight = AboutUsHighlightModel.objects.filter(id=kwargs['pk']).first()
+        if highlight is None:
+            return Response(data={'error': 'Highlight not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = AboutUsHighlightDashboardSerializer(highlight, data=request.data, partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="Delete About Us Highlights",
+        operation_summary="Delete About Us Highlights",
+        responses={
+            200: 'Successfully deleted',
+            404: 'About Us not found',
+        },
+        tags=['dashboard']
+    )
+    def delete(self, request, *args, **kwargs):
+        highlight = AboutUsHighlightModel.objects.filter(id=kwargs['pk']).first()
+        if highlight is None:
+            return Response(data={'error': 'Highlight not found'}, status=status.HTTP_404_NOT_FOUND)
+        highlight.delete()
+        return Response(data={'message': 'Highlight successfully deleted'})
 
 
 
