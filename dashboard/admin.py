@@ -13,7 +13,7 @@ from .models import (
     PositionModel,
     TeamMemberModel,
     WebContactInfoModel,
-    WebSocialMedia,
+    WebSocialMedia, QrCodeModel,
 )
 
 admin.site.register(HomeModel)
@@ -30,3 +30,4 @@ admin.site.register(PositionModel)
 admin.site.register(TeamMemberModel)
 admin.site.register(WebContactInfoModel)
 admin.site.register(WebSocialMedia)
+admin.site.register(QrCodeModel)

@@ -1,3 +1,4 @@
+import qrcode
 from rest_framework import serializers
 from .models import (
     TeamMemberModel,
@@ -11,9 +12,12 @@ from .models import (
     SALARY_TYPE,
     PriceTypeModel,
     AboutUsHighlightModel,
-    PriceHighLightModel,
+    PriceHighLightModel, QrCodeModel,
 )
 from web.models import ContactUsModel
+import json
+from io import BytesIO
+from django.core.files.base import ContentFile
 
 
 class TeamMemberDashboardSerializer(serializers.ModelSerializer):
@@ -133,3 +137,62 @@ class PriceTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = PriceTypeModel
         fields = ['id', 'name']
+
+
+class QrCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QrCodeModel
+        fields = ['id', 'url', 'image']
+
+
+class QrCodeCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QrCodeModel
+        fields = ['id', 'url', 'image']
+
+    def create(self, validated_data):
+        url = validated_data.get("url")
+        qr = qrcode.QRCode(version=1, box_size=10, border=4)
+        qr.add_data(url)
+        qr.make(fit=True)
+
+        img = qr.make_image(fill="black", back_color="white")
+
+        buffer = BytesIO()
+        img.save(buffer)
+        buffer.seek(0)
+
+        instance = QrCodeModel(**validated_data)
+
+        filename = f"qr_{instance.id or 'temp'}.png"
+        instance.image.save(filename, ContentFile(buffer.read()), save=False)
+
+        buffer.close()
+        instance.save()
+        return instance
+
+
+class QrCodeUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QrCodeModel
+        fields = ['id', 'url', 'image']
+
+    def update(self, instance, validated_data):
+        instance.url = validated_data.get("url", instance.url)
+        qr = qrcode.QRCode(version=1, box_size=10, border=4)
+        qr.add_data(instance.url)
+        qr.make(fit=True)
+
+        img = qr.make_image(fill="black", back_color="white")
+
+        buffer = BytesIO()
+        img.save(buffer)
+        buffer.seek(0)
+
+        # Save new QR image to the image field
+        filename = f"qr_{instance.id}.png"
+        instance.image.save(filename, ContentFile(buffer.read()), save=False)
+
+        buffer.close()
+        instance.save()
+        return instance

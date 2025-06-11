@@ -161,3 +161,8 @@ class DashboardStatsModel(BaseModel):
 
     def __str__(self):
         return f'{self.employees}'
+
+
+class QrCodeModel(BaseModel):
+    url = models.URLField()
+    image = models.ImageField(upload_to='media/', blank=True, null=True)
