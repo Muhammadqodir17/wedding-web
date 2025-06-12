@@ -25,7 +25,14 @@ SECRET_KEY = 'django-insecure-%prjp0h9(k5+zjugu^ylpw(km63u96xoa&v(lgq820pd+2%=s=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['abdumannof.anonymous.uz', '38.242.243.191', '38.242.243.191:8039']
+ALLOWED_HOSTS = [
+    'abdumannof.anonymous.uz',
+    '38.242.243.191',
+    '38.242.243.191:8039',
+    '127.0.0.1',
+    'localhost',
+]
+
 
 
 
@@ -88,7 +95,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CORS_ALLOW_CREDENTIALS = True
 
-
+CORS_ALLOW_ALL_ORIGINS = True
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
