@@ -24,7 +24,15 @@ SECRET_KEY = 'django-insecure-%prjp0h9(k5+zjugu^ylpw(km63u96xoa&v(lgq820pd+2%=s=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    'abdumannof.anonymous.uz',
+    '38.242.243.191',
+    '38.242.243.191:8039',
+    '127.0.0.1',
+    'localhost',
+]
+
+
 
 # Application definition
 
@@ -43,6 +51,7 @@ INSTALLED_APPS = [
     'web',
 
     # installed
+    'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
@@ -50,6 +59,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -78,6 +88,14 @@ TEMPLATES = [
         },
     },
 ]
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
@@ -147,6 +165,8 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
 }
+
+
 
 SWAGGER_SETTINGS = {
     'SCHEMES': ['https'],
