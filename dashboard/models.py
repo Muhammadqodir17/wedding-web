@@ -134,7 +134,7 @@ class WebContactInfoModel(BaseModel):
     open_from = models.TimeField()
     close_to = models.TimeField()
     location = models.CharField(max_length=300)
-    location_url = models.CharField(max_length=300)
+    location_url = models.CharField(max_length=300, default='example.com')
 
     def __str__(self):
         return f"{self.email}"
