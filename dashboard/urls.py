@@ -8,7 +8,7 @@ from .views import (
     AboutUsViewSet,
     MessagesViewSet,
     SocialMediasViewSet,
-    WebSettingsViewSet, PriceHighlightViewSet, AboutUsHighlightViewSet,
+    WebSettingsViewSet, PriceHighlightViewSet, AboutUsHighlightViewSet, QRCodeViewSet,
 )
 
 urlpatterns = [
@@ -73,4 +73,9 @@ urlpatterns = [
          name='update_price_highlight'),
     path('delete_price_highlight/<int:pk>/', PriceHighlightViewSet.as_view({'delete': 'delete'}),
          name='delete_price_highlight'),
+    # qr code
+    path('get_qr_code/', QRCodeViewSet.as_view({'get': 'get'}), name='get_qr_code'),
+    path('create_qr_code/', QRCodeViewSet.as_view({'post': 'create'}), name='create_qr_code'),
+    path('update_qr_code/<int:pk>/', QRCodeViewSet.as_view({'patch': 'update'}), name='update_qr_code'),
+    path('delete_qr_code/<int:pk>/', QRCodeViewSet.as_view({'delete': 'delete'}), name='delete_qr_code'),
 ]

@@ -5,7 +5,6 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils.timezone import now
-from yaml import serialize
 
 from .models import (
     TeamMemberModel,
@@ -15,7 +14,10 @@ from .models import (
     AboutUsModel,
     WebSocialMedia,
     WebContactInfoModel,
-    DashboardStatsModel, AboutUsHighlightModel, PriceHighLightModel
+    DashboardStatsModel,
+    AboutUsHighlightModel,
+    PriceHighLightModel,
+    QrCodeModel
 )
 from .serializers import (
     TeamMemberDashboardSerializer,
@@ -29,7 +31,10 @@ from .serializers import (
     DashboardStatsSerializer,
     UnansweredMessagesSerializer,
     UpcomingEventsSerializer,
-    PriceTypeSerializer, AboutUsHighlightDashboardSerializer, PriceHighlightDashboardSerializer,
+    AboutUsHighlightDashboardSerializer,
+    PriceHighlightDashboardSerializer,
+    QrCodeCreateSerializer,
+    QrCodeUpdateSerializer, QrCodeSerializer,
 )
 from web.models import ContactUsModel
 from rest_framework.parsers import (
@@ -1124,6 +1129,79 @@ class AboutUsHighlightViewSet(ViewSet):
             return Response(data={'error': 'Highlight not found'}, status=status.HTTP_404_NOT_FOUND)
         highlight.delete()
         return Response(data={'message': 'Highlight successfully deleted'})
+
+
+class QRCodeViewSet(ViewSet):
+    @swagger_auto_schema(
+        operation_description="Get Qr Code",
+        operation_summary="Get Qr Code",
+        responses={
+            200: QrCodeSerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get(self, request, *args, **kwargs):
+        qr_code = QrCodeModel.objects.all()
+        serializer = QrCodeSerializer(qr_code, many=True, context={'request': request})
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="Create Qr Code",
+        operation_summary="Create Qr Code",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'url': openapi.Schema(type=openapi.TYPE_STRING, description='url'),
+            },
+            required=['url']
+        ),
+        responses={201: QrCodeCreateSerializer()},
+        tags=['dashboard'],
+    )
+    def create(self, request, *args, **kwargs):
+        serializer = QrCodeCreateSerializer(data=request.data, context={'request': request})
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        operation_description="Update Qr Code",
+        operation_summary="Update Qr Code",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'url': openapi.Schema(type=openapi.TYPE_STRING, description='url'),
+            },
+            required=[]
+        ),
+        responses={200: QrCodeUpdateSerializer()},
+        tags=['dashboard'],
+    )
+    def update(self, request, *args, **kwargs):
+        qr_code = QrCodeModel.objects.filter(id=kwargs['pk']).first()
+        if qr_code is None:
+            return Response(data={'error': 'QrCode not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = QrCodeUpdateSerializer(qr_code, data=request.data, partial=True)
+        if serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="Delete Qr Code",
+        operation_summary="Delete Qr Code",
+        responses={
+            200: 'Successfully deleted',
+        },
+        tags=['dashboard']
+    )
+    def delete(self, request, *args, **kwargs):
+        qr_code = QrCodeModel.objects.filter(id=kwargs['pk']).first()
+        if qr_code is None:
+            return Response(data={'error': 'QrCode not found'}, status=status.HTTP_404_NOT_FOUND)
+        qr_code.delete()
+        return Response(data={'message': 'Successfully Deleted'}, status=status.HTTP_200_OK)
 
 
 
