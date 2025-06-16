@@ -60,7 +60,7 @@ urlpatterns = [
     path('delete_web_setting/<int:pk>/', WebSettingsViewSet.as_view({'delete': 'delete'}), name='delete_web_setting'),
     # about us highlight
     path('get_about_us_highlight/', AboutUsHighlightViewSet.as_view({'get': 'get'}), name='get_about_us_highlight'),
-    path('create_about_us_highlight/', AboutUsHighlightViewSet.as_view({'create': 'create'}),
+    path('create_about_us_highlight/', AboutUsHighlightViewSet.as_view({'post': 'create'}),
          name='create_about_us_highlight'),
     path('update_about_us_highlight/<int:pk>/', AboutUsHighlightViewSet.as_view({'patch': 'update'}),
          name='update_about_us_highlight'),
@@ -68,7 +68,7 @@ urlpatterns = [
          name='delete_about_us_highlight'),
     # price highlight
     path('get_price_highlight/', PriceHighlightViewSet.as_view({'get': 'get'}), name='get_price_highlight'),
-    path('create_price_highlight/', PriceHighlightViewSet.as_view({'create': 'create'}), name='create_price_highlight'),
+    path('create_price_highlight/', PriceHighlightViewSet.as_view({'post': 'create'}), name='create_price_highlight'),
     path('update_price_highlight/<int:pk>/', PriceHighlightViewSet.as_view({'patch': 'update'}),
          name='update_price_highlight'),
     path('delete_price_highlight/<int:pk>/', PriceHighlightViewSet.as_view({'delete': 'delete'}),
