@@ -79,7 +79,7 @@ class PriceModel(BaseModel):
     highlights = models.ManyToManyField(PriceHighLightModel)
 
     def __str__(self):
-        return f'{self.type.name}'
+        return f'{self.type}'
 
 # 2
 class BookModel(BaseModel):
