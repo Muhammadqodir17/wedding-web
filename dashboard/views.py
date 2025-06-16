@@ -522,7 +522,7 @@ class PricesViewSet(ViewSet):
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                'type': openapi.Schema(type=openapi.TYPE_INTEGER, description='type'),
+                'type': openapi.Schema(type=openapi.TYPE_STRING, description='type'),
                 'description': openapi.Schema(type=openapi.TYPE_STRING, description='description'),
                 'price': openapi.Schema(type=openapi.TYPE_NUMBER, format='float', description='price'),
             },
@@ -544,7 +544,7 @@ class PricesViewSet(ViewSet):
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                'type': openapi.Schema(type=openapi.TYPE_INTEGER, description='type'),
+                'type': openapi.Schema(type=openapi.TYPE_STRING, description='type'),
                 'description': openapi.Schema(type=openapi.TYPE_STRING, description='description'),
                 'price': openapi.Schema(type=openapi.TYPE_NUMBER, format='float', description='price'),
             },
