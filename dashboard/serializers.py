@@ -87,6 +87,12 @@ class MessageSerializer(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name', 'phone_number', 'message', 'answered']
 
 
+class UpdateMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactUsModel
+        fields = ['id', 'answered']
+
+
 class SocialMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = WebSocialMedia

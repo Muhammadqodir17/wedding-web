@@ -33,3 +33,17 @@ class CheckAuthenticationMiddleware(MiddlewareMixin):
             payload = jwt.decode(token.split()[1], settings.SECRET_KEY, algorithms=['HS256'])
             if payload.get('role') != 'admin':
                 return JsonResponse(data={'error': 'Permission denied'}, status=403)
+
+from django.utils import translation
+from django.conf import settings
+
+class ForceDefaultLanguageMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        translation.activate(settings.LANGUAGE_CODE)
+        request.LANGUAGE_CODE = settings.LANGUAGE_CODE
+        response = self.get_response(request)
+        response.set_cookie(settings.LANGUAGE_COOKIE_NAME, settings.LANGUAGE_CODE)
+        return response

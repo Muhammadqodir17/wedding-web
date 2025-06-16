@@ -24,15 +24,7 @@ SECRET_KEY = 'django-insecure-%prjp0h9(k5+zjugu^ylpw(km63u96xoa&v(lgq820pd+2%=s=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    'abdumannof.anonymous.uz',
-    '38.242.243.191',
-    '38.242.243.191:8039',
-    '127.0.0.1',
-    'localhost',
-]
-
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -56,12 +48,15 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
+    'modeltranslation',
+    # 'rosetta',
 ]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'authentication.middlewares.ForceDefaultLanguageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -88,7 +83,6 @@ TEMPLATES = [
         },
     },
 ]
-
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -129,14 +123,22 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
+from django.utils.translation import gettext_lazy as _
 
 LANGUAGE_CODE = 'uz'
+
+LANGUAGES = [
+    ('uz', _('Uzbek')),
+
+]
 
 TIME_ZONE = 'Asia/Tashkent'
 
 USE_I18N = True
 
 USE_TZ = True
+
+LOCALE_PATHS = [BASE_DIR / 'locale']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -165,8 +167,6 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
 }
-
-
 
 SWAGGER_SETTINGS = {
     'SCHEMES': ['https'],
