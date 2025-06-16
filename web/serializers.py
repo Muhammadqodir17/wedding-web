@@ -73,11 +73,6 @@ class PriceSerializer(serializers.ModelSerializer):
         model = PriceModel
         fields = ['id', 'type', 'price', 'description', 'highlights']
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['type'] = instance.type.name
-        return data
-
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:

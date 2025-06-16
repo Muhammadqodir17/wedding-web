@@ -68,11 +68,6 @@ class PriceDashboardSerializer(serializers.ModelSerializer):
         model = PriceModel
         fields = ['id', 'type', 'price', 'description']
 
-    # def to_representation(self, instance):
-    #     data = super().to_representation(instance)
-    #     # data['type'] = instance.type.name
-    #     return data
-
 
 class AboutUsHighlightDashboardSerializer(serializers.ModelSerializer):
     class Meta:
