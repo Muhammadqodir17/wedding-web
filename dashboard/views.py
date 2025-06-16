@@ -34,7 +34,9 @@ from .serializers import (
     AboutUsHighlightDashboardSerializer,
     PriceHighlightDashboardSerializer,
     QrCodeCreateSerializer,
-    QrCodeUpdateSerializer, QrCodeSerializer,
+    QrCodeUpdateSerializer,
+    QrCodeSerializer,
+    UpdateMessageSerializer,
 )
 from web.models import ContactUsModel
 from rest_framework.parsers import (
@@ -748,22 +750,18 @@ class MessagesViewSet(ViewSet):
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                'first_name': openapi.Schema(type=openapi.TYPE_STRING, description='first_name'),
-                'last_name': openapi.Schema(type=openapi.TYPE_STRING, description='last_name'),
-                'phone_number': openapi.Schema(type=openapi.TYPE_STRING, description='phone_number'),
-                'message': openapi.Schema(type=openapi.TYPE_STRING, description='message'),
                 'answered': openapi.Schema(type=openapi.TYPE_BOOLEAN, description='answered'),
             },
             required=[]
         ),
-        responses={200: MessageSerializer()},
+        responses={200: UpdateMessageSerializer()},
         tags=['dashboard'],
     )
     def update(self, request, *args, **kwargs):
         our_team = ContactUsModel.objects.filter(id=kwargs['pk']).first()
         if our_team is None:
             return Response(data={'error': 'Message not  found'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = MessageSerializer(our_team, data=request.data, partial=True)
+        serializer = UpdateMessageSerializer(our_team, data=request.data, partial=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
