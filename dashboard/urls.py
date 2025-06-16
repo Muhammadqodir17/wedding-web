@@ -68,7 +68,7 @@ urlpatterns = [
          name='delete_about_us_highlight'),
     # price highlight
     path('get_price_highlight/', PriceHighlightViewSet.as_view({'get': 'get'}), name='get_price_highlight'),
-    path('create_price_highlight/', PriceHighlightViewSet.as_view({'post': 'create'}), name='create_price_highlight'),
+    path('create_price_highlight/<int:pk>/', PriceHighlightViewSet.as_view({'post': 'create'}), name='create_price_highlight'),
     path('update_price_highlight/<int:pk>/', PriceHighlightViewSet.as_view({'patch': 'update'}),
          name='update_price_highlight'),
     path('delete_price_highlight/<int:pk>/', PriceHighlightViewSet.as_view({'delete': 'delete'}),

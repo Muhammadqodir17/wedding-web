@@ -57,11 +57,6 @@ class GalleryModel(BaseModel):
         return f"{self.category}"
 
 
-class PriceHighLightModel(BaseModel):
-    description = models.TextField(_('description'), )
-
-    def __str__(self):
-        return f'{self.description}'
 
 
 class PriceTypeModel(BaseModel):
@@ -76,10 +71,17 @@ class PriceModel(BaseModel):
     type = models.CharField(max_length=250)
     price = FloatField(_('price'), default=0)
     description = models.TextField(_('description'), )
-    highlights = models.ManyToManyField(PriceHighLightModel)
 
     def __str__(self):
         return f'{self.type}'
+
+
+class PriceHighLightModel(BaseModel):
+    price = models.ForeignKey(PriceModel, on_delete=models.CASCADE, null=True, blank=True)
+    description = models.TextField(_('description'), )
+
+    def __str__(self):
+        return f'{self.description}'
 
 # 2
 class BookModel(BaseModel):

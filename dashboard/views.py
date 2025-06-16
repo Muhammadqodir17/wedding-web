@@ -36,7 +36,7 @@ from .serializers import (
     QrCodeCreateSerializer,
     QrCodeUpdateSerializer,
     QrCodeSerializer,
-    UpdateMessageSerializer, DashboardSpecialPositionSerializer,
+    UpdateMessageSerializer, DashboardSpecialPositionSerializer, CreatePriceDashboardSerializer,
 )
 from web.models import ContactUsModel
 from rest_framework.parsers import (
@@ -528,11 +528,11 @@ class PricesViewSet(ViewSet):
             },
             required=['type', 'description', 'price']
         ),
-        responses={201: PriceDashboardSerializer()},
+        responses={201: CreatePriceDashboardSerializer()},
         tags=['dashboard'],
     )
     def create(self, request, *args, **kwargs):
-        serializer = PriceDashboardSerializer(data=request.data)
+        serializer = CreatePriceDashboardSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
@@ -550,14 +550,14 @@ class PricesViewSet(ViewSet):
             },
             required=[]
         ),
-        responses={200: PriceDashboardSerializer()},
+        responses={200: CreatePriceDashboardSerializer()},
         tags=['dashboard'],
     )
     def update(self, request, *args, **kwargs):
         our_team = PriceModel.objects.filter(id=kwargs['pk']).first()
         if our_team is None:
             return Response(data={'error': 'Price not found'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = PriceDashboardSerializer(our_team, data=request.data, partial=True)
+        serializer = CreatePriceDashboardSerializer(our_team, data=request.data, partial=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
@@ -1007,6 +1007,10 @@ class PriceHighlightViewSet(ViewSet):
         tags=['dashboard'],
     )
     def create(self, request, *args, **kwargs):
+        price = PriceModel.objects.filter(id=kwargs['pk']).first()
+        if price is None:
+            return Response(data={'error': 'Price not found'}, status=status.HTTP_404_NOT_FOUND)
+        request.data['price'] = price.id
         serializer = PriceHighlightDashboardSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

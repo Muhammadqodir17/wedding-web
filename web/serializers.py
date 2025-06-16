@@ -68,10 +68,14 @@ class PriceHighlightSerializer(serializers.ModelSerializer):
 
 
 class PriceSerializer(serializers.ModelSerializer):
-    highlights = PriceHighlightSerializer(many=True)
+    highlights = serializers.SerializerMethodField(source='get_highlight')
     class Meta:
         model = PriceModel
         fields = ['id', 'type', 'price', 'description', 'highlights']
+
+    def get_highlight(self, data):
+        highlight = PriceHighLightModel.objects.filter(price=data)
+        return PriceHighlightSerializer(highlight, many=True)
 
 
 class BookSerializer(serializers.ModelSerializer):

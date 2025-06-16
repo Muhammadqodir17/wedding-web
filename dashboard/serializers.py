@@ -60,10 +60,21 @@ class DashboardSpecialPositionSerializer(serializers.ModelSerializer):
 class PriceHighlightDashboardSerializer(serializers.ModelSerializer):
     class Meta:
         model = PriceHighLightModel
-        fields = ['id', 'description']
+        fields = ['id', 'description', 'price']
 
 
 class PriceDashboardSerializer(serializers.ModelSerializer):
+    highlight = serializers.SerializerMethodField(source='get_highlight')
+    class Meta:
+        model = PriceModel
+        fields = ['id', 'type', 'price', 'description', 'highlight']
+
+    def get_highlight(self, data):
+        highlight = PriceHighLightModel.objects.filter(price=data)
+        return PriceHighlightDashboardSerializer(highlight, many=True).data
+
+
+class CreatePriceDashboardSerializer(serializers.ModelSerializer):
     class Meta:
         model = PriceModel
         fields = ['id', 'type', 'price', 'description']
