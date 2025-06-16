@@ -525,6 +525,11 @@ class PricesViewSet(ViewSet):
                 'type': openapi.Schema(type=openapi.TYPE_STRING, description='type'),
                 'description': openapi.Schema(type=openapi.TYPE_STRING, description='description'),
                 'price': openapi.Schema(type=openapi.TYPE_NUMBER, format='float', description='price'),
+                'highlights': openapi.Schema(
+                    type=openapi.TYPE_ARRAY,
+                    items=openapi.Items(type=openapi.TYPE_STRING),
+                    description='List of highlight descriptions'
+                ),
             },
             required=['type', 'description', 'price']
         ),
@@ -535,7 +540,11 @@ class PricesViewSet(ViewSet):
         serializer = CreatePriceDashboardSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
+        obj = serializer.save()
+        highlights = request.data.get('highlights', [])
+        for highlight in highlights:
+            PriceHighLightModel.objects.create(price=obj, description=highlight)
+        serializer = PriceDashboardSerializer(obj)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(
