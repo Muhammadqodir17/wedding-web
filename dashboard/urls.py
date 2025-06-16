@@ -78,4 +78,10 @@ urlpatterns = [
     path('create_qr_code/', QRCodeViewSet.as_view({'post': 'create'}), name='create_qr_code'),
     path('update_qr_code/<int:pk>/', QRCodeViewSet.as_view({'patch': 'update'}), name='update_qr_code'),
     path('delete_qr_code/<int:pk>/', QRCodeViewSet.as_view({'delete': 'delete'}), name='delete_qr_code'),
+    # position
+    path('get_all_positions/', QRCodeViewSet.as_view({'get': 'get_all'}), name='get_all_positions'),
+    path('create_position/', QRCodeViewSet.as_view({'post': 'create'}), name='create_position'),
+    path('update_position/<int:pk>/', QRCodeViewSet.as_view({'patch': 'update'}), name='update_position'),
+    path('delete_position/<int:pk>/', QRCodeViewSet.as_view({'delete': 'delete'}), name='delete_position'),
+
 ]

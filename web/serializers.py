@@ -68,7 +68,7 @@ class PriceHighlightSerializer(serializers.ModelSerializer):
 
 
 class PriceSerializer(serializers.ModelSerializer):
-    highlights = AboutUsHighlightSerializer(many=True)
+    highlights = PriceHighlightSerializer(many=True)
     class Meta:
         model = PriceModel
         fields = ['id', 'type', 'price', 'description', 'highlights']

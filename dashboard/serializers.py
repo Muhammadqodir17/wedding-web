@@ -12,7 +12,7 @@ from .models import (
     SALARY_TYPE,
     PriceTypeModel,
     AboutUsHighlightModel,
-    PriceHighLightModel, QrCodeModel,
+    PriceHighLightModel, QrCodeModel, PositionModel,
 )
 from web.models import ContactUsModel
 import json
@@ -49,6 +49,12 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = WeddingCategoryModel
         fields = ['id', 'name', 'description', 'image']
+
+
+class DashboardSpecialPositionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PositionModel
+        fields = ['id', 'name']
 
 
 class PriceHighlightDashboardSerializer(serializers.ModelSerializer):

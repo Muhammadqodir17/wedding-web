@@ -17,7 +17,7 @@ from .models import (
     DashboardStatsModel,
     AboutUsHighlightModel,
     PriceHighLightModel,
-    QrCodeModel
+    QrCodeModel, PositionModel
 )
 from .serializers import (
     TeamMemberDashboardSerializer,
@@ -36,7 +36,7 @@ from .serializers import (
     QrCodeCreateSerializer,
     QrCodeUpdateSerializer,
     QrCodeSerializer,
-    UpdateMessageSerializer,
+    UpdateMessageSerializer, DashboardSpecialPositionSerializer,
 )
 from web.models import ContactUsModel
 from rest_framework.parsers import (
@@ -1200,6 +1200,80 @@ class QRCodeViewSet(ViewSet):
             return Response(data={'error': 'QrCode not found'}, status=status.HTTP_404_NOT_FOUND)
         qr_code.delete()
         return Response(data={'message': 'Successfully Deleted'}, status=status.HTTP_200_OK)
+
+
+class DashboardPositionViewSet(ViewSet):
+    @swagger_auto_schema(
+        operation_description="Get all Positions",
+        operation_summary="Get all Positions",
+        responses={
+            200: DashboardSpecialPositionSerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get_all(self, request, *args, **kwargs):
+        position = PositionModel.objects.all()
+        serializer = DashboardSpecialPositionSerializer(position, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="Create Position",
+        operation_summary="Create Position",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'name': openapi.Schema(type=openapi.TYPE_STRING, description='name'),
+            },
+            required=['name']
+        ),
+        responses={201: DashboardSpecialPositionSerializer()},
+        tags=['dashboard'],
+    )
+    def create(self, request, *args, **kwargs):
+        serializer = DashboardSpecialPositionSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        operation_description="Update Price Highlights",
+        operation_summary="Update Price Highlights",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'description': openapi.Schema(type=openapi.TYPE_STRING, description='description'),
+            },
+            required=[]
+        ),
+        responses={200: DashboardSpecialPositionSerializer()},
+        tags=['dashboard'],
+    )
+    def update(self, request, *args, **kwargs):
+        position = PositionModel.objects.filter(id=kwargs['pk']).first()
+        if position is None:
+            return Response(data={'error': 'Position not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = DashboardSpecialPositionSerializer(position, data=request.data, partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="Delete Position",
+        operation_summary="Delete Position",
+        responses={
+            200: 'Successfully deleted',
+            404: 'Position not found',
+        },
+        tags=['dashboard']
+    )
+    def delete(self, request, *args, **kwargs):
+        position = PositionModel.objects.filter(id=kwargs['pk']).first()
+        if position is None:
+            return Response(data={'error': 'Position not found'}, status=status.HTTP_404_NOT_FOUND)
+        position.delete()
+        return Response(data={'message': 'Position successfully deleted'})
 
 
 
