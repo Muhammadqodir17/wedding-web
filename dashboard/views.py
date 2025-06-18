@@ -1363,7 +1363,7 @@ class QRCodeViewSet(ViewSet):
         if qr_code is None:
             return Response(data={'error': 'QrCode not found'}, status=status.HTTP_404_NOT_FOUND)
         serializer = QrCodeUpdateSerializer(qr_code, data=request.data, partial=True)
-        if serializer.is_valid():
+        if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(data=serializer.data, status=status.HTTP_200_OK)
