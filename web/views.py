@@ -110,7 +110,7 @@ class WebViewSet(ViewSet):
     )
     def prices(self, request, *args, **kwargs):
         main_page = PriceModel.objects.all()
-        serializer = PriceSerializer(main_page, many=True)
+        serializer = PriceSerializer(main_page, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -172,7 +172,7 @@ class WebViewSet(ViewSet):
     )
     def our_services_for_footer(self, request, *args, **kwargs):
         main_page = WeddingCategoryModel.objects.all()
-        serializer = CategoriesForFooterSerializer(main_page, many=True)
+        serializer = CategoriesForFooterSerializer(main_page, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -185,7 +185,7 @@ class WebViewSet(ViewSet):
     )
     def contact_us_info(self, request, *args, **kwargs):
         main_page = WebContactInfoModel.objects.all().first()
-        serializer = WebContactInfoSerializer(main_page)
+        serializer = WebContactInfoSerializer(main_page, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -198,7 +198,7 @@ class WebViewSet(ViewSet):
     )
     def contact_us_info_for_footer(self, request, *args, **kwargs):
         main_page = WebContactInfoModel.objects.all().first()
-        serializer = WebContactInfoForFooterSerializer(main_page)
+        serializer = WebContactInfoForFooterSerializer(main_page, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -224,7 +224,7 @@ class WebViewSet(ViewSet):
     )
     def calendar_datas(self, request, *args, **kwargs):
         datas = BookModel.objects.all()
-        serializer = CalendarDataSerializer(datas, many=True)
+        serializer = CalendarDataSerializer(datas, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -272,5 +272,5 @@ class WebViewSet(ViewSet):
     )
     def get_categories(self, request, *args, **kwargs):
         categories = WeddingCategoryModel.objects.all()
-        serializer = GetCategorySerializer(categories, many=True)
+        serializer = GetCategorySerializer(categories, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
