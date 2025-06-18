@@ -36,7 +36,9 @@ from .serializers import (
     QrCodeCreateSerializer,
     QrCodeUpdateSerializer,
     QrCodeSerializer,
-    UpdateMessageSerializer, DashboardSpecialPositionSerializer, CreatePriceDashboardSerializer,
+    UpdateMessageSerializer,
+    DashboardSpecialPositionSerializer,
+    CreatePriceDashboardSerializer,
 )
 from web.models import ContactUsModel
 from rest_framework.parsers import (
@@ -127,6 +129,21 @@ class OurTeamViewSet(ViewSet):
     def get_all(self, request, *args, **kwargs):
         our_team = TeamMemberModel.objects.all()
         serializer = TeamMemberDashboardSerializer(our_team, many=True, context={'request': request})
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="Get Team Member by Id",
+        operation_summary="Get Team Member by Id",
+        responses={
+            200: TeamMemberDashboardSerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get_by_id(self, request, *args, **kwargs):
+        team_member = TeamMemberModel.objects.filter(id=kwargs['pk']).first()
+        if team_member is None:
+            return Response(data={'error': 'Team member not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = TeamMemberDashboardSerializer(team_member, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -322,6 +339,21 @@ class EventsViewSet(ViewSet):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
+        operation_description="Get Event by Id",
+        operation_summary="Get Event by Id",
+        responses={
+            200: EventSerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get_by_id(self, request, *args, **kwargs):
+        event = BookModel.objects.filter(id=kwargs['pk']).first()
+        if event is None:
+            return Response(data={'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = EventSerializer(event)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
         operation_description="Create Event",
         operation_summary="Create Event",
         request_body=openapi.Schema(
@@ -408,6 +440,21 @@ class CategoriesViewSet(ViewSet):
     def get_all(self, request, *args, **kwargs):
         our_team = WeddingCategoryModel.objects.all()
         serializer = CategorySerializer(our_team, many=True, context={'request': request})
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="Get Category by Id",
+        operation_summary="Get Category by Id",
+        responses={
+            200: CategorySerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get_by_id(self, request, *args, **kwargs):
+        wedding_category = WeddingCategoryModel.objects.filter(id=kwargs['pk']).first()
+        if wedding_category is None:
+            return Response(data={'error': 'Category not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = CategorySerializer(wedding_category, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -517,6 +564,21 @@ class PricesViewSet(ViewSet):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
+        operation_description="Get Price by Id",
+        operation_summary="Get Price by Id",
+        responses={
+            200: PriceDashboardSerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get_by_id(self, request, *args, **kwargs):
+        price = PriceModel.objects.filter(id=kwargs['pk']).first()
+        if price is None:
+            return Response(data={'error': 'Price not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = PriceDashboardSerializer(price)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
         operation_description="Create Price",
         operation_summary="Create Price",
         request_body=openapi.Schema(
@@ -603,6 +665,21 @@ class AboutUsViewSet(ViewSet):
     def get_all(self, request, *args, **kwargs):
         our_team = AboutUsModel.objects.all()
         serializer = AboutUsDashboardSerializer(our_team, many=True, context={'request': request})
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="Get About Us by Id",
+        operation_summary="Get About Us by Id",
+        responses={
+            200: AboutUsDashboardSerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get_by_id(self, request, *args, **kwargs):
+        about_us = AboutUsModel.objects.filter(id=kwargs['pk']).first()
+        if about_us is None:
+            return Response(data={'error': 'About Us not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = AboutUsDashboardSerializer(about_us, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -754,6 +831,21 @@ class MessagesViewSet(ViewSet):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
+        operation_description="Get Message by Id",
+        operation_summary="Get Message by Id",
+        responses={
+            200: MessageSerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get_by_id(self, request, *args, **kwargs):
+        contact_us = ContactUsModel.objects.filter(id=kwargs['pk']).first()
+        if contact_us is None:
+            return Response(data={'error': 'Message not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = MessageSerializer(contact_us)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
         operation_description="Update Message",
         operation_summary="Update Message",
         request_body=openapi.Schema(
@@ -807,6 +899,21 @@ class SocialMediasViewSet(ViewSet):
     def get_all(self, request, *args, **kwargs):
         our_team = WebSocialMedia.objects.all()
         serializer = SocialMediaSerializer(our_team, many=True, context={'request': request})
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="Get Social Media by Id",
+        operation_summary="Get Social Media by Id",
+        responses={
+            200: SocialMediaSerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get_by_id(self, request, *args, **kwargs):
+        social_media = WebSocialMedia.objects.filter(id=kwargs['pk']).first()
+        if social_media is None:
+            return Response(data={'error': 'Social Media not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = SocialMediaSerializer(social_media, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -916,6 +1023,21 @@ class WebSettingsViewSet(ViewSet):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
+        operation_description="Get Contact Info by Id",
+        operation_summary="Get Contact Info by Id",
+        responses={
+            200: WebSettingsSerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get_by_id(self, request, *args, **kwargs):
+        web = WebContactInfoModel.objects.filter(id=kwargs['pk']).first()
+        if web is None:
+            return Response(data={'error': 'Web Settings not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = WebSettingsSerializer(web)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
         operation_description="Create Contact Info",
         operation_summary="Create Contact Info",
         request_body=openapi.Schema(
@@ -1003,6 +1125,21 @@ class PriceHighlightViewSet(ViewSet):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
+        operation_description="Get Price Highlight by Id",
+        operation_summary="Get Price Highlight by Id",
+        responses={
+            200: PriceHighlightDashboardSerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get_by_id(self, request, *args, **kwargs):
+        highlight = PriceHighLightModel.objects.filter(id=kwargs['pk']).first()
+        if highlight is None:
+            return Response(data={'error': 'Price Highlight is not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = PriceHighlightDashboardSerializer(highlight)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
         operation_description="Create Price Highlights",
         operation_summary="Create Price Highlights",
         request_body=openapi.Schema(
@@ -1077,6 +1214,21 @@ class AboutUsHighlightViewSet(ViewSet):
     )
     def get(self, request, *args, **kwargs):
         highlight = AboutUsHighlightModel.objects.all()
+        serializer = AboutUsHighlightDashboardSerializer(highlight, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="Get About Us Highlight by Id",
+        operation_summary="Get About Us Highlight by Id",
+        responses={
+            200: AboutUsHighlightDashboardSerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get_by_id(self, request, *args, **kwargs):
+        highlight = AboutUsHighlightModel.objects.filter(id=kwargs['pk']).first()
+        if highlight is None:
+            return Response(data={'error': 'About Us Highlight not found'}, status=status.HTTP_404_NOT_FOUND)
         serializer = AboutUsHighlightDashboardSerializer(highlight, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -1157,6 +1309,21 @@ class QRCodeViewSet(ViewSet):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
+        operation_description="Get Qr Code bu Id",
+        operation_summary="Get Qr Code by Id",
+        responses={
+            200: QrCodeSerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get_by_id(self, request, *args, **kwargs):
+        qr_code = QrCodeModel.objects.filter(id=kwargs['pk']).first()
+        if qr_code is None:
+            return Response(data={'error': 'Qr Code not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = QrCodeSerializer(qr_code, context={'request': request})
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
         operation_description="Create Qr Code",
         operation_summary="Create Qr Code",
         request_body=openapi.Schema(
@@ -1230,6 +1397,21 @@ class DashboardPositionViewSet(ViewSet):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
+        operation_description="Get Positions by Id",
+        operation_summary="Get Positions by Id",
+        responses={
+            200: DashboardSpecialPositionSerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get_by_id(self, request, *args, **kwargs):
+        position = PositionModel.objects.filter(id=kwargs['pk']).first()
+        if position is None:
+            return Response(data={'error': 'Position not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = DashboardSpecialPositionSerializer(position)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
         operation_description="Create Position",
         operation_summary="Create Position",
         request_body=openapi.Schema(
@@ -1255,7 +1437,7 @@ class DashboardPositionViewSet(ViewSet):
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                'description': openapi.Schema(type=openapi.TYPE_STRING, description='description'),
+                'name': openapi.Schema(type=openapi.TYPE_STRING, description='name'),
             },
             required=[]
         ),
