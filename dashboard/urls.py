@@ -9,6 +9,7 @@ from .views import (
     MessagesViewSet,
     SocialMediasViewSet,
     WebSettingsViewSet, PriceHighlightViewSet, AboutUsHighlightViewSet, QRCodeViewSet, DashboardPositionViewSet,
+    DashboardNewsViewSet,
 )
 
 urlpatterns = [
@@ -101,4 +102,10 @@ urlpatterns = [
     path('create_position/', DashboardPositionViewSet.as_view({'post': 'create'}), name='create_position'),
     path('update_position/<int:pk>/', DashboardPositionViewSet.as_view({'patch': 'update'}), name='update_position'),
     path('delete_position/<int:pk>/', DashboardPositionViewSet.as_view({'delete': 'delete'}), name='delete_position'),
+    # news
+    path('get_all_news/', DashboardNewsViewSet.as_view({'get': 'get_all'}), name='get_all_positions'),
+    path('get_news_by_id/<int:pk>/', DashboardNewsViewSet.as_view({'get': 'get_by_id'}), name='get_all_positions'),
+    path('create_news/', DashboardNewsViewSet.as_view({'post': 'create'}), name='get_all_positions'),
+    path('update_news/<int:pk>/', DashboardNewsViewSet.as_view({'patch': 'update'}), name='get_all_positions'),
+    path('delete_news/<int:pk>/', DashboardNewsViewSet.as_view({'delete': 'delete'}), name='get_all_positions'),
 ]
