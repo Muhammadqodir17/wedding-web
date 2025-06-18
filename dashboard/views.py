@@ -58,6 +58,8 @@ class MainPageViewSet(ViewSet):
     )
     def get_web_stats(self, request, *args, **kwargs):
         web_stats = DashboardStatsModel.objects.all().first()
+        if web_stats is None:
+            web_stats = DashboardStatsModel.objects.create()
         serializer = DashboardStatsSerializer(web_stats)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -71,7 +73,7 @@ class MainPageViewSet(ViewSet):
     )
     def upcoming_events(self, request, *args, **kwargs):
         today = now().date()
-        events = BookModel.objects.filter(book_date__gte=today).order_by('book_date')
+        events = BookModel.objects.filter(book_date__gte=today).order_by('-book_date')[:3]
         serializer = UpcomingEventsSerializer(events, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
