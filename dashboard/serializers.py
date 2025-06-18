@@ -119,6 +119,7 @@ class WebSettingsSerializer(serializers.ModelSerializer):
 
 
 class DashboardStatsSerializer(serializers.ModelSerializer):
+    annual_income = serializers.SerializerMethodField(source='get_annual_income')
     class Meta:
         model = DashboardStatsModel
         fields = ['id', 'employees', 'events', 'annual_income', 'unanswered_messages']
@@ -132,6 +133,10 @@ class DashboardStatsSerializer(serializers.ModelSerializer):
         data['events'] = instance.events + events
         data['unanswered_messages'] = messages
         return data
+
+    def get_annual_income(self, request, *args, **kwargs):
+        work_experience = AboutUsModel.objects.all().first()
+        return work_experience.work_experience
 
 
 class UnansweredMessagesSerializer(serializers.ModelSerializer):
