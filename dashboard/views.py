@@ -17,7 +17,7 @@ from .models import (
     DashboardStatsModel,
     AboutUsHighlightModel,
     PriceHighLightModel,
-    QrCodeModel, PositionModel
+    QrCodeModel, PositionModel, NewsModel
 )
 from .serializers import (
     TeamMemberDashboardSerializer,
@@ -38,7 +38,7 @@ from .serializers import (
     QrCodeSerializer,
     UpdateMessageSerializer,
     DashboardSpecialPositionSerializer,
-    CreatePriceDashboardSerializer,
+    CreatePriceDashboardSerializer, DashboardNewsSerializer,
 )
 from web.models import ContactUsModel
 from rest_framework.parsers import (
@@ -1473,4 +1473,122 @@ class DashboardPositionViewSet(ViewSet):
         return Response(data={'message': 'Position successfully deleted'})
 
 
+class DashboardNewsViewSet(ViewSet):
+    parser_classes = [MultiPartParser, FormParser]
+    @swagger_auto_schema(
+        operation_description="Get all News",
+        operation_summary="Get all News",
+        responses={
+            200: DashboardNewsSerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get_all(self, request, *args, **kwargs):
+        news = NewsModel.objects.all()
+        serializer = DashboardNewsSerializer(news, many=True, context={'request': request})
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(
+        operation_description="Get News by Id",
+        operation_summary="Get News by Id",
+        responses={
+            200: DashboardNewsSerializer(),
+        },
+        tags=['dashboard']
+    )
+    def get_by_id(self, request, *args, **kwargs):
+        news = NewsModel.objects.filter(id=kwargs['pk']).first()
+        if news is None:
+            return Response(data={'error': 'News not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = DashboardNewsSerializer(news, context={'request': request})
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="Create News",
+        operation_summary="Create News",
+        manual_parameters=[
+            openapi.Parameter(
+                name='title',
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_STRING,
+                required=True,
+                description="title"
+            ),
+            openapi.Parameter(
+                name='description',
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_STRING,
+                required=True,
+                description="description",
+            ),
+            openapi.Parameter(
+                name='image',
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_FILE,
+                required=True,
+                description="image",
+            ),
+        ],
+        responses={201: DashboardNewsSerializer()},
+        tags=['dashboard'],
+    )
+    def create(self, request, *args, **kwargs):
+        serializer = DashboardNewsSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        operation_description="Update News",
+        operation_summary="Update News",
+        manual_parameters=[
+            openapi.Parameter(
+                name='title',
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_STRING,
+                required=True,
+                description="title"
+            ),
+            openapi.Parameter(
+                name='description',
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_STRING,
+                required=True,
+                description="description",
+            ),
+            openapi.Parameter(
+                name='image',
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_FILE,
+                required=True,
+                description="image",
+            ),
+        ],
+        responses={200: DashboardNewsSerializer()},
+        tags=['dashboard'],
+    )
+    def update(self, request, *args, **kwargs):
+        news = NewsModel.objects.filter(id=kwargs['pk']).first()
+        if news is  None:
+            return Response(data={'error': 'News not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = DashboardNewsSerializer(news, data=request.data, partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="Delete News",
+        operation_summary="Delete News",
+        responses={
+            200: 'News successfully deleted',
+        },
+        tags=['dashboard']
+    )
+    def delete(self, request, *args, **kwargs):
+        news = NewsModel.objects.filter(id=kwargs['pk']).first()
+        if news is None:
+            return Response(data={'error': 'News not found'}, status=status.HTTP_404_NOT_FOUND)
+        news.delete()
+        return Response(data={'News successfully deleted'}, status=status.HTTP_200_OK)

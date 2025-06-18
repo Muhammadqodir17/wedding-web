@@ -14,7 +14,7 @@ from .models import (
     SALARY_TYPE,
     PriceTypeModel,
     AboutUsHighlightModel,
-    PriceHighLightModel, QrCodeModel, PositionModel,
+    PriceHighLightModel, QrCodeModel, PositionModel, NewsModel,
 )
 from web.models import ContactUsModel
 import json
@@ -212,3 +212,9 @@ class QrCodeUpdateSerializer(serializers.ModelSerializer):
         instance.url = validated_data.get("url", instance.url)
         instance.save()
         return instance
+
+
+class DashboardNewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NewsModel
+        fields = ['id', 'title', 'description', 'image']
