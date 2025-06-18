@@ -1,5 +1,7 @@
 import qrcode
 from rest_framework import serializers
+from rest_framework.exceptions import NotFound
+
 from .models import (
     TeamMemberModel,
     BookModel,
@@ -145,15 +147,17 @@ class UnansweredMessagesSerializer(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name', 'phone_number', 'message', 'answered']
 
 
+class CategoryImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WeddingCategoryModel
+        fields = ['id', 'name', 'image']
+
+
 class UpcomingEventsSerializer(serializers.ModelSerializer):
+    category = CategoryImageSerializer()
     class Meta:
         model = BookModel
         fields = ['id', 'category', 'book_date', 'booker_first_name', 'booker_last_name', 'number_of_guests']
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['category'] = instance.category.name
-        return data
 
 
 class PriceTypeSerializer(serializers.ModelSerializer):

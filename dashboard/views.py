@@ -73,7 +73,7 @@ class MainPageViewSet(ViewSet):
     )
     def upcoming_events(self, request, *args, **kwargs):
         today = now().date()
-        events = BookModel.objects.filter(book_date__gte=today).order_by('-book_date')[:3]
+        events = BookModel.objects.filter(book_date__gte=today).order_by('book_date')[:3]
         serializer = UpcomingEventsSerializer(events, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
