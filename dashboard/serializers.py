@@ -154,10 +154,14 @@ class CategoryImageSerializer(serializers.ModelSerializer):
 
 
 class UpcomingEventsSerializer(serializers.ModelSerializer):
-    category = CategoryImageSerializer()
+    category = serializers.SerializerMethodField()
     class Meta:
         model = BookModel
         fields = ['id', 'category', 'book_date', 'booker_first_name', 'booker_last_name', 'number_of_guests']
+
+    def get_category(self, obj):
+        request = self.context.get('request')
+        return CategoryImageSerializer(obj.category, context={'request': request}).data
 
 
 class PriceTypeSerializer(serializers.ModelSerializer):
