@@ -134,7 +134,7 @@ class DashboardStatsSerializer(serializers.ModelSerializer):
         data['unanswered_messages'] = messages
         return data
 
-    def get_annual_income(self, request, *args, **kwargs):
+    def get_annual_income(self, data):
         work_experience = AboutUsModel.objects.all().first()
         return work_experience.work_experience
 
@@ -202,20 +202,5 @@ class QrCodeUpdateSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.url = validated_data.get("url", instance.url)
-        qr = qrcode.QRCode(version=1, box_size=10, border=4)
-        qr.add_data(instance.url)
-        qr.make(fit=True)
-
-        img = qr.make_image(fill="black", back_color="white")
-
-        buffer = BytesIO()
-        img.save(buffer)
-        buffer.seek(0)
-
-        # Save new QR image to the image field
-        filename = f"qr_{instance.id}.png"
-        instance.image.save(filename, ContentFile(buffer.read()), save=False)
-
-        buffer.close()
         instance.save()
         return instance
