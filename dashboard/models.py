@@ -57,8 +57,6 @@ class GalleryModel(BaseModel):
         return f"{self.category}"
 
 
-
-
 class PriceTypeModel(BaseModel):
     name = models.CharField(_('name'), max_length=250)
 
@@ -155,7 +153,6 @@ class WebSocialMedia(BaseModel):
 class DashboardStatsModel(BaseModel):
     employees = models.IntegerField(_('employees'), default=0)
     events = models.IntegerField(_('events'), default=0)
-    annual_income = models.IntegerField(_('annual_income'), default=0)
     unanswered_messages = models.IntegerField(_('unanswered_messages'), default=0)
 
     def __str__(self):
