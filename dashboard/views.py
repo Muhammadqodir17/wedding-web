@@ -60,7 +60,7 @@ class MainPageViewSet(ViewSet):
         web_stats = DashboardStatsModel.objects.all().first()
         if web_stats is None:
             web_stats = DashboardStatsModel.objects.create()
-        serializer = DashboardStatsSerializer(web_stats)
+        serializer = DashboardStatsSerializer(web_stats, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -74,7 +74,7 @@ class MainPageViewSet(ViewSet):
     def upcoming_events(self, request, *args, **kwargs):
         today = now().date()
         events = BookModel.objects.filter(book_date__gte=today).order_by('-book_date')[:3]
-        serializer = UpcomingEventsSerializer(events, many=True)
+        serializer = UpcomingEventsSerializer(events, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -87,7 +87,7 @@ class MainPageViewSet(ViewSet):
     )
     def unanswered_messages(self, request, *args, **kwargs):
         messages = ContactUsModel.objects.filter(answered=False)
-        serializer = UnansweredMessagesSerializer(messages, many=True)
+        serializer = UnansweredMessagesSerializer(messages, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -337,7 +337,7 @@ class EventsViewSet(ViewSet):
     )
     def get_all(self, request, *args, **kwargs):
         our_team = BookModel.objects.all()
-        serializer = EventSerializer(our_team, many=True)
+        serializer = EventSerializer(our_team, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -352,7 +352,7 @@ class EventsViewSet(ViewSet):
         event = BookModel.objects.filter(id=kwargs['pk']).first()
         if event is None:
             return Response(data={'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = EventSerializer(event)
+        serializer = EventSerializer(event, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -562,7 +562,7 @@ class PricesViewSet(ViewSet):
     )
     def get_all(self, request, *args, **kwargs):
         our_team = PriceModel.objects.all()
-        serializer = PriceDashboardSerializer(our_team, many=True)
+        serializer = PriceDashboardSerializer(our_team, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -577,7 +577,7 @@ class PricesViewSet(ViewSet):
         price = PriceModel.objects.filter(id=kwargs['pk']).first()
         if price is None:
             return Response(data={'error': 'Price not found'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = PriceDashboardSerializer(price)
+        serializer = PriceDashboardSerializer(price, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -829,7 +829,7 @@ class MessagesViewSet(ViewSet):
     )
     def get_all(self, request, *args, **kwargs):
         our_team = ContactUsModel.objects.all()
-        serializer = MessageSerializer(our_team, many=True)
+        serializer = MessageSerializer(our_team, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -844,7 +844,7 @@ class MessagesViewSet(ViewSet):
         contact_us = ContactUsModel.objects.filter(id=kwargs['pk']).first()
         if contact_us is None:
             return Response(data={'error': 'Message not found'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = MessageSerializer(contact_us)
+        serializer = MessageSerializer(contact_us, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -1021,7 +1021,7 @@ class WebSettingsViewSet(ViewSet):
     )
     def get_all(self, request, *args, **kwargs):
         our_team = WebContactInfoModel.objects.all()
-        serializer = WebSettingsSerializer(our_team, many=True)
+        serializer = WebSettingsSerializer(our_team, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -1036,7 +1036,7 @@ class WebSettingsViewSet(ViewSet):
         web = WebContactInfoModel.objects.filter(id=kwargs['pk']).first()
         if web is None:
             return Response(data={'error': 'Web Settings not found'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = WebSettingsSerializer(web)
+        serializer = WebSettingsSerializer(web, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -1123,7 +1123,7 @@ class PriceHighlightViewSet(ViewSet):
     )
     def get(self, request, *args, **kwargs):
         highlight = PriceHighLightModel.objects.all()
-        serializer = PriceHighlightDashboardSerializer(highlight, many=True)
+        serializer = PriceHighlightDashboardSerializer(highlight, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -1138,7 +1138,7 @@ class PriceHighlightViewSet(ViewSet):
         highlight = PriceHighLightModel.objects.filter(id=kwargs['pk']).first()
         if highlight is None:
             return Response(data={'error': 'Price Highlight is not found'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = PriceHighlightDashboardSerializer(highlight)
+        serializer = PriceHighlightDashboardSerializer(highlight, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -1216,7 +1216,7 @@ class AboutUsHighlightViewSet(ViewSet):
     )
     def get(self, request, *args, **kwargs):
         highlight = AboutUsHighlightModel.objects.all()
-        serializer = AboutUsHighlightDashboardSerializer(highlight, many=True)
+        serializer = AboutUsHighlightDashboardSerializer(highlight, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -1231,7 +1231,7 @@ class AboutUsHighlightViewSet(ViewSet):
         highlight = AboutUsHighlightModel.objects.filter(id=kwargs['pk']).first()
         if highlight is None:
             return Response(data={'error': 'About Us Highlight not found'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = AboutUsHighlightDashboardSerializer(highlight, many=True)
+        serializer = AboutUsHighlightDashboardSerializer(highlight, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -1395,7 +1395,7 @@ class DashboardPositionViewSet(ViewSet):
     )
     def get_all(self, request, *args, **kwargs):
         position = PositionModel.objects.all()
-        serializer = DashboardSpecialPositionSerializer(position, many=True)
+        serializer = DashboardSpecialPositionSerializer(position, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -1410,7 +1410,7 @@ class DashboardPositionViewSet(ViewSet):
         position = PositionModel.objects.filter(id=kwargs['pk']).first()
         if position is None:
             return Response(data={'error': 'Position not found'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = DashboardSpecialPositionSerializer(position)
+        serializer = DashboardSpecialPositionSerializer(position, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
